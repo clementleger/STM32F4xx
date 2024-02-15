@@ -21,8 +21,7 @@
 
 #include "driver.h"
 
-#if TRINAMIC_SPI_ENABLE && (defined(BOARD_FYSETC_S6) || defined(BOARD_BTT_SKR_PRO_1_1) || defined(BOARD_BTT_SKR_PRO_1_2) || defined(BOARD_MKS_ROBIN_NANO_30))
-
+#if TRINAMIC_SPI_ENABLE && (defined(BOARD_FYSETC_S6) || defined(BOARD_BTT_SKR_PRO_1_1) || defined(BOARD_BTT_SKR_PRO_1_2) || defined(BOARD_MKS_ROBIN_NANO_30) || defined(BOARD_PROTONEER_3XX))
 #include "trinamic/common.h"
 
 #define SPIport(p) SPIportI(p)

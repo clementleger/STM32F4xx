@@ -23,8 +23,8 @@
 #error "Axis configuration is not supported!"
 #endif
 
-#if TRINAMIC_ENABLE
-#error "Trinamic plugin not supported!"
+#if TRINAMIC_ENABLE == 2130
+#include "trinamic/tmc2130.h"
 #endif
 
 #define BOARD_NAME "Protoneer v3"
@@ -47,6 +47,17 @@
 #undef DRIVER_SPINDLE_DIR_ENABLE
 #define SPINDLE_ENABLE SPINDLE_PWM0_NODIR
 #define DRIVER_SPINDLE_DIR_ENABLE 0
+#endif
+
+#if TRINAMIC_SPI_ENABLE
+#define HAS_BOARD_INIT
+#define TRINAMIC_SPI_PORT 3
+#define MOTOR_CSX_PORT  GPIOA
+#define MOTOR_CSX_PIN   12
+#define MOTOR_CSY_PORT  GPIOC
+#define MOTOR_CSY_PIN   6
+#define MOTOR_CSZ_PORT  GPIOC
+#define MOTOR_CSZ_PIN   5
 #endif
 
 // Define step pulse output pins.
