@@ -60,6 +60,10 @@
 #define MOTOR_CSZ_PIN   5
 #endif
 
+#define HAS_IOPORTS
+#define AUXOUTPUT0_PWM_PORT_BASE GPIOC_BASE
+#define AUXOUTPUT0_PWM_PIN       8
+
 // Define step pulse output pins.
 #define X_STEP_PORT             GPIOA // D2
 #define X_STEP_PIN              10

@@ -52,18 +52,21 @@ static const adc_map_t adc_map[] = {
     { GPIOA,  1, 123, ADC1, ADC_CHANNEL_1 },
     { GPIOA,  2, 123, ADC1, ADC_CHANNEL_2 },
     { GPIOA,  3, 123, ADC1, ADC_CHANNEL_3 },
+    { GPIOC,  0, 123, ADC1, ADC_CHANNEL_10 },
+    { GPIOC,  1, 123, ADC1, ADC_CHANNEL_11 },
+    { GPIOC,  2, 123, ADC1, ADC_CHANNEL_12 },
+    { GPIOC,  3, 123, ADC1, ADC_CHANNEL_13 },
+#ifdef ADC2
     { GPIOA,  4,  12, ADC2, ADC_CHANNEL_4 },
     { GPIOA,  5,  12, ADC2, ADC_CHANNEL_5 },
     { GPIOA,  6,  12, ADC2, ADC_CHANNEL_6 },
     { GPIOA,  7,  12, ADC2, ADC_CHANNEL_7 },
     { GPIOB,  0,  12, ADC2, ADC_CHANNEL_8 },
     { GPIOB,  1,  12, ADC2, ADC_CHANNEL_9 },
-    { GPIOC,  0, 123, ADC1, ADC_CHANNEL_10 },
-    { GPIOC,  1, 123, ADC1, ADC_CHANNEL_11 },
-    { GPIOC,  2, 123, ADC1, ADC_CHANNEL_12 },
-    { GPIOC,  3, 123, ADC1, ADC_CHANNEL_13 },
     { GPIOC,  4,  12, ADC2, ADC_CHANNEL_14 },
     { GPIOC,  5,  12, ADC2, ADC_CHANNEL_15 },
+#endif
+#ifdef ADC3
     { GPIOF,  3,   3, ADC3, ADC_CHANNEL_9 },
     { GPIOF,  4,   3, ADC3, ADC_CHANNEL_14 },
     { GPIOF,  5,   3, ADC3, ADC_CHANNEL_15 },
@@ -72,6 +75,7 @@ static const adc_map_t adc_map[] = {
     { GPIOF,  8,   3, ADC3, ADC_CHANNEL_6 },
     { GPIOF,  9,   3, ADC3, ADC_CHANNEL_7 },
     { GPIOF, 10,   3, ADC3, ADC_CHANNEL_8 }
+#endif
 };
 
 static io_ports_data_t analog;
@@ -404,7 +408,7 @@ static xbar_t *get_pin_info (io_port_type_t type, io_port_direction_t dir, uint8
                     pin.function = aux_in_analog[pin.id].id;
                     pin.group = aux_in_analog[pin.id].group;
                     pin.pin = aux_in_analog[pin.id].pin;
-                    pin.bit = 1 << aux_in_analog[pin.id].pin;
+                    // pin.bit = 1 << aux_in_analog[pin.id].pin;
                     pin.port = (void *)aux_in_analog[pin.id].port;
                     pin.description = aux_in_analog[pin.id].description;
                     info = &pin;
@@ -424,7 +428,7 @@ static xbar_t *get_pin_info (io_port_type_t type, io_port_direction_t dir, uint8
                 pin.function = aux_out_analog[pin.id].id;
                 pin.group = aux_out_analog[pin.id].group;
                 pin.pin = aux_out_analog[pin.id].pin;
-                pin.bit = 1 << aux_out_analog[pin.id].pin;
+                // pin.bit = 1 << aux_out_analog[pin.id].pin;
                 pin.port = (void *)aux_out_analog[pin.id].port;
                 pin.description = aux_out_analog[pin.id].description;
                 pin.get_value = pwm_get_value;
@@ -597,12 +601,18 @@ void ioports_init_analog (pin_group_pins_t *aux_inputs, pin_group_pins_t *aux_ou
 
                         if((adc = calloc(sizeof(ADC_HandleTypeDef), 1))) {
 
+#ifdef ADC1
+                            if(adc_map[j].alt == 123)
+                                __HAL_RCC_ADC1_CLK_ENABLE();
+#endif
+#ifdef ADC3
                             if(adc_map[j].alt == 3)
                                 __HAL_RCC_ADC3_CLK_ENABLE();
+#endif
+#ifdef ADC2
                             else if(adc_map[j].alt == 12)
                                 __HAL_RCC_ADC2_CLK_ENABLE();
-                            else
-                                __HAL_RCC_ADC1_CLK_ENABLE();
+#endif
 
                             gpio_init.Pin = aux_inputs->pins.inputs[i].bit;
                             HAL_GPIO_Init(aux_inputs->pins.inputs[i].port, &gpio_init);
